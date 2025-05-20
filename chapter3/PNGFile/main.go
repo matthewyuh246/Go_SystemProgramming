@@ -40,7 +40,7 @@ func readChunks(file *os.File) []io.Reader {
 }
 
 func main() {
-	file, err := os.Open("PNG_transparency_demonstration_1.png")
+	file, err := os.Open("/home/matthewyuh246/Go_SystemPrograming/chapter3/PNGFile/PNG_transparency_demonstration_1.png")
 	if err != nil {
 		panic(err)
 	}
