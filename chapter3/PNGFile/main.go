@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/binary"
 	"fmt"
 	"io"
@@ -13,6 +14,11 @@ func dumpChunk(chunk io.Reader) {
 	buffer := make([]byte, 4)
 	chunk.Read(buffer)
 	fmt.Printf("chunk '%v' (%d bytes)\n", string(buffer), length)
+	if bytes.Equal(buffer, []byte("teXt")) {
+		rawText := make([]byte, length)
+		chunk.Read(rawText)
+		fmt.Println(string(rawText))
+	}
 }
 
 func readChunks(file *os.File) []io.Reader {
@@ -40,7 +46,7 @@ func readChunks(file *os.File) []io.Reader {
 }
 
 func main() {
-	file, err := os.Open("/home/matthewyuh246/Go_SystemPrograming/chapter3/PNGFile/PNG_transparency_demonstration_1.png")
+	file, err := os.Open("/home/matthewyuh246/Go_SystemPrograming/chapter3/PNGFile/PNG_transparency_demonstration_secret.png")
 	if err != nil {
 		panic(err)
 	}
