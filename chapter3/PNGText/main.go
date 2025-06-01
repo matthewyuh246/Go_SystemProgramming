@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
 	"hash/crc32"
 	"io"
 	"os"
@@ -20,19 +19,6 @@ func textChunk(text string) io.Reader {
 	writer.Write(byteText)
 	binary.Write(&buffer, binary.BigEndian, crc.Sum32())
 	return &buffer
-}
-
-func dumpChunk(chunk io.Reader) {
-	var length int32
-	binary.Read(chunk, binary.BigEndian, &length)
-	buffer := make([]byte, 4)
-	chunk.Read(buffer)
-	fmt.Printf("chunk '%v' (%d bytes)\n", string(buffer), length)
-	if bytes.Equal(buffer, []byte("teXt")) {
-		rawText := make([]byte, length)
-		chunk.Read(rawText)
-		fmt.Println(string(rawText))
-	}
 }
 
 func readChunks(file *os.File) []io.Reader {
@@ -80,8 +66,5 @@ func main() {
 	// 残りのチャンクを追加
 	for _, chunk := range chunks {
 		io.Copy(newFile, chunk)
-	}
-	for _, chunk := range chunks {
-		dumpChunk(chunk)
 	}
 }
